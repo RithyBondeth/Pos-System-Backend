@@ -1,6 +1,7 @@
-import { Column, CreateDateColumn, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Staff } from "./staff.entity";
 
+@Entity()
 export class Role {
     @PrimaryGeneratedColumn()
     id: number;

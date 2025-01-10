@@ -1,8 +1,9 @@
-import { Column, CreateDateColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Staff } from "../staff/staff.entity";
 import { TransactionItem } from "./transactionItem.entity";
 import { Customer } from "../customer/customer.entity";
 
+@Entity()
 export class Transaction {
     @PrimaryGeneratedColumn()
     id: number;
