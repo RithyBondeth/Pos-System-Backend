@@ -1,9 +1,8 @@
 import { Module } from '@nestjs/common';
-import { AppController } from './app.controller';
-import { AppService } from './app.service';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { dbConfig } from './config/db.config';
+import { StaffModule } from './staff/staff.module';
 
 @Module({
   imports: [
@@ -15,8 +14,9 @@ import { dbConfig } from './config/db.config';
       inject: [ConfigService],
       useFactory: dbConfig,
     }),
+    StaffModule,
   ],
-  controllers: [AppController],
-  providers: [AppService],
+  controllers: [],
+  providers: [],
 })
 export class AppModule {}

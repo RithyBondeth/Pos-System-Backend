@@ -1,6 +1,10 @@
-import { BeforeInsert, Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
-import { GenderE, RoleE, ShiftE } from "./staff.type";
+import { BeforeInsert, Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
+import { GenderE, ShiftE } from "./staff.type";
 import * as bcrypt from "bcrypt";
+import { Role } from "./role.entity";
+import { Transaction } from "../transaction/transaction.entity";
+import { Product } from "../product/product.entity";
+import { Inventory } from "../inventory/inventory.entity";
 
 @Entity()
 export class Staff {
@@ -16,7 +20,7 @@ export class Staff {
     @Column({ nullable: true })
     profile: string;
 
-    @Column({ type: 'enum', enum: GenderE, default: GenderE.MALE })
+    @Column({ type: 'enum', enum: GenderE, nullable: false })
     gender: GenderE;
 
     @Column()
@@ -26,16 +30,16 @@ export class Staff {
     address: string;
 
     @Column({ unique: true })
-    phone: string;
+    phoneNumber: string;
 
-    @Column({ type: 'enum', enum: ShiftE, default: ShiftE.FULLTIME })
+    @Column({ type: 'enum', enum: ShiftE, nullable: false })
     shift: ShiftE;
 
-    @Column()
+    @Column('decimal', { precision: 10, scale: 2 })
     salary: number;
 
-    @Column({ type: 'enum', enum: RoleE, default: RoleE.CASHIER })
-    role: RoleE;
+    @ManyToOne(() => Role, (role) => role.staff)
+    role: Role;
 
     @Column({ unique: true })
     email: string;
@@ -49,10 +53,22 @@ export class Staff {
     @Column({ nullable: true })
     resetPasswordExpires: Date;
 
+    @OneToMany(() => Transaction, (transaction) => transaction.staff, { cascade: true})
+    transactions: Transaction[];
+
+    @OneToMany(() => Product, (product) => product.createdBy, { cascade: true })
+    createdProducts: Product[];
+
+    @OneToMany(() => Product, (product) => product.updatedBy, { cascade: true })
+    updatedProducts: Product[];
+
+    @OneToMany(() => Inventory, (inventory) => inventory.staff, { cascade: true })
+    inventories: Inventory[];
+
     @CreateDateColumn()
     updatedAt: Date;
 
-    @CreateDateColumn()
+    @UpdateDateColumn()
     createdAt: Date;
 
     @BeforeInsert()
