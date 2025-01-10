@@ -31,11 +31,11 @@ export class Product {
     transactionItems: TransactionItem[];
 
     //Track which manager created the product
-    @ManyToOne(() => Staff, (staff) => staff.createdProducts, { nullable: true, cascade: true })
+    @ManyToOne(() => Staff, (staff) => staff.createdProducts, { nullable: true })
     createdBy: Staff;
 
     //Track which manager updated the product
-    @ManyToOne(() => Staff, (staff) => staff.updatedProducts, { nullable: true, cascade: true })
+    @ManyToOne(() => Staff, (staff) => staff.updatedProducts, { nullable: true })
     updatedBy: Staff;
 
     //Track stock movements (add or remove)
