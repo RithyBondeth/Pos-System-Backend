@@ -97,7 +97,10 @@ export class StaffService {
             if(profile) {
                 const profileImage = this.uploadfileService.getUploadFile('profiles', profile);     
                 //Delete the old profile if it exists and is not the deafult profile
-                if(staff.profile && !staff.profile.includes('default')) UploadfileService.deleteFile(staff.profile, 'Profile Image');
+                if(staff.profile && !staff.profile.includes('default')) {
+                    const oldProfilePath = path.join(process.cwd(),'storage/profiles', staff.profile.split('/').pop());
+                    UploadfileService.deleteFile(oldProfilePath, 'Profile Image');
+                }
                 
                 // Save the new profile image
                 staff.profile = profileImage;
@@ -125,6 +128,8 @@ export class StaffService {
                 'email', 'phoneNumber', 'shift', 'salary'
             ]
 
+            //staff.firstname = body.firstname
+            //staff.lastname = body.lastname
             Object.entries(body).forEach(([key, value]) => {
                 if(value !== undefined && updatableFields.includes(key)) {
                     staff[key] = value;
