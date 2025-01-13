@@ -1,22 +1,30 @@
-import { Body, Controller, Get, Param, ParseIntPipe, Post, Put, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
-import { FileInterceptor } from '@nestjs/platform-express';
-import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
+import { GetStaffDto } from './dtos/get-staff.dto';
+import { UpdateStaffT } from './types/update-staff.type';
+import { DeleteStaffT } from './types/delete-staff.type';
+import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
+import { FilterStaffDto } from './dtos/filter-staff.dto';
 
 @Controller('staff')
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Get('all')
-  async findAll() {
-    return this.staffService.findAll();
+  async findAll(@Query() filter: FilterStaffDto): Promise<GetStaffDto[]> {
+    return this.staffService.findAll(filter);
+  }
+
+  @Get('count')
+  async countStaff(@Query() query: CountStaffQueryParamDTO): Promise<{ total: number }> {
+    return this.staffService.countStaff(query);
   }
 
   @Get(':id')
-  async findOneById(@Param('id') staffId: number) {
+  async findOneById(@Param('id') staffId: number): Promise<GetStaffDto> {
     return this.staffService.findOneById(staffId);
   }
 
@@ -32,7 +40,12 @@ export class StaffController {
     @Param('id', ParseIntPipe) staffId: number,
     @Body() body: UpdateStaffDto, 
     @UploadedFile() profile: Express.Multer.File,
-  ) {
+  ): Promise<UpdateStaffT> {
     return this.staffService.updateStaff(staffId, body, profile);
+  }
+
+  @Delete('delete/:id') 
+  deleteStaff(@Param('id', ParseIntPipe) staffId: number): Promise<DeleteStaffT> {
+    return this.staffService.deleteStaff(staffId);
   }
 }

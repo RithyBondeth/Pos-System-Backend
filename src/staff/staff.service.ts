@@ -12,6 +12,9 @@ import { GetStaffDto } from './dtos/get-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { CreateStaffT } from './types/create-staff.type';
 import { UpdateStaffT } from './types/update-staff.type';
+import { DeleteStaffT } from './types/delete-staff.type';
+import { FilterStaffDto } from './dtos/filter-staff.dto';
+import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 
 @Injectable()
 export class StaffService {
@@ -22,11 +25,31 @@ export class StaffService {
         private readonly uploadfileService: UploadfileService,
     ){}
     
-    async findAll(): Promise<GetStaffDto[]> {
-        const staff = await this.staffRepo.find({ relations: ['role'] });
+    async findAll(filter: FilterStaffDto): Promise<GetStaffDto[]> {
+        const staff = await this.staffRepo.find({ 
+            skip: filter?.skip || 0,
+            take: filter?.limit || 3,
+            where: {
+                ...(filter.gender ? { gender: filter.gender } : {}),
+                ...(filter.role ? { role: { name: filter.role } } : {}),
+                ...(filter.shift ? { shift: filter.shift } : {}),
+            },
+            relations: ['role']
+        });
         if(staff.length === 0) throw new NotFoundException("There are no staff available");
 
-        return staff.map((st) => new GetStaffDto(st));
+        return staff.map((staff) => new GetStaffDto(staff));
+    }
+
+    async countStaff(query: CountStaffQueryParamDTO): Promise<{ total: number }> {
+        const count = await this.staffRepo.count({
+            where: {
+                ...(query.gender ? { gender: query.gender } : {}),
+                ...(query.role ? { role: { name: query.role } } : {}),
+                ...(query.shift ? { shift: query.shift } : {}),
+            }
+        });
+        return { total: count };
     }
 
     async findOneById(staffId: number): Promise<GetStaffDto> {
@@ -76,7 +99,7 @@ export class StaffService {
             }
         } catch (error) {
             console.error("Failed to create staff: ", error.message);
-            throw new BadRequestException("Failed to create staff");
+            throw new BadRequestException(error.message);
         }      
     }
 
@@ -146,7 +169,33 @@ export class StaffService {
             }
         } catch (error) {
             console.error("Failed to update staff: ", error.message);
-            throw new BadRequestException("Falied to update staff");
+            throw new BadRequestException(error.message);
         }
+    }
+
+    async deleteStaff(staffId: number): Promise<DeleteStaffT> {
+       try {
+            //Find staff by Id
+            const staff = await this.staffRepo.findOne({ where: { id: staffId }});
+            if(!staff) throw new NotFoundException(`There is no staff with id ${staffId}`); 
+
+            //Delete staff profile if it not default profile
+            if(staff.profile && !staff.profile.includes('default')) {
+                const profilePath = path.join(process.cwd(),'storage/profiles', staff.profile.split('/').pop());
+                UploadfileService.deleteFile(profilePath, 'Profile Image');
+            }
+
+            //Delete staff from database
+            await this.staffRepo.delete({ id: staffId });
+
+            //Return success message
+            return  {
+                message: "Deleted Staff Successfully",
+                staff: new GetStaffDto(staff)
+            }
+       } catch (error) {
+            console.error('Failed to delete staff: ', error.message);
+            throw new BadRequestException(error.message);
+       }
     }
 }
