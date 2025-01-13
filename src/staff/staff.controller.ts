@@ -4,6 +4,7 @@ import { CreateStaffDto } from './dtos/create-staff.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
+import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
 
 @Controller('staff')
 export class StaffController {
@@ -20,13 +21,13 @@ export class StaffController {
   }
 
   @Post('create')
-  @UseInterceptors(FileInterceptor('profile', { storage: UploadfileService.storageOptions('profiles') }))
+  @UseInterceptors(new UploadFileInterceptor('profile', 'profiles'))
   async createStaff(@Body() body: CreateStaffDto, @UploadedFile() profile: Express.Multer.File) { 
     return this.staffService.createStaff(body, profile);
   }
 
   @Put('update/:id')
-  @UseInterceptors(FileInterceptor('profile', { storage: UploadfileService.storageOptions('profiles') }))
+  @UseInterceptors(new UploadFileInterceptor('profile', 'profiles'))
   async updateStaff(
     @Param('id', ParseIntPipe) staffId: number,
     @Body() body: UpdateStaffDto, 
