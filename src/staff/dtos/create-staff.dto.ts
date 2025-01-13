@@ -14,9 +14,8 @@ export class CreateStaffDto {
     @IsEnum(GenderE)
     @IsNotEmpty()
     gender: GenderE;
-
-    @Type(() => Date)
-    @IsDateString() //2002-05-07
+    
+    @IsDateString({ strict: true }) //2002-05-07
     @IsNotEmpty()
     dob: string;
 
