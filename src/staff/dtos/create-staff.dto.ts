@@ -14,7 +14,7 @@ export class CreateStaffDto {
     @IsEnum(GenderE)
     @IsNotEmpty()
     gender: GenderE;
-    
+
     @IsDateString({ strict: true }) //2002-05-07
     @IsNotEmpty()
     dob: string;
@@ -26,6 +26,10 @@ export class CreateStaffDto {
     @IsEnum(ShiftE)
     @IsNotEmpty()
     shift: ShiftE;
+
+    @IsString()
+    @IsNotEmpty()
+    role: string;
 
     @Matches(/^(?:\+855|0)([1-9]{1}[0-9]{7,8})$/, { message: "Invalid Cambodian Phone Number Format" })
     @IsNotEmpty()

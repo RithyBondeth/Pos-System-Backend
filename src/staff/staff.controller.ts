@@ -18,9 +18,9 @@ export class StaffController {
     return this.staffService.findOneById(staffId);
   }
 
-  // @Post('create')
-  // @UseInterceptors(FileInterceptor('profile', { storage: UploadfileService.storageOptions('profiles') }))
-  // async createStaff(@Body() body: CreateStaffDto, @UploadedFile() profile: Express.Multer.File) { 
-  //   return this.staffService.createStaff(body, profile);
-  // }
+  @Post('create')
+  @UseInterceptors(FileInterceptor('profile', { storage: UploadfileService.storageOptions('profiles') }))
+  async createStaff(@Body() body: CreateStaffDto, @UploadedFile() profile: Express.Multer.File) { 
+    return this.staffService.createStaff(body, profile);
+  }
 }

@@ -6,11 +6,15 @@ import { CreateStaffDto } from './dtos/create-staff.dto';
 import * as path from 'path';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
 import { GenderE } from 'src/entities/staff/staff.type';
+import { Role } from 'src/entities/staff/role.entity';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class StaffService {
     constructor(
         @InjectRepository(Staff) private readonly staffRepo: Repository<Staff>,
+        @InjectRepository(Role) private readonly roleRepo: Repository<Role>,
+        private readonly configService: ConfigService,
         private readonly uploadfileService: UploadfileService,
     ){}
     
@@ -44,13 +48,20 @@ export class StaffService {
                 profileImage = this.uploadfileService.getUploadFile('profiles', profile);
             } else {
                 if(body.gender === GenderE.MALE) 
-                    profileImage = "";
+                    profileImage = this.configService.get<string>('BASE_URL') + this.configService.get<string>('DEFAULT_MALE_PROFILE')
                 else 
-                    profileImage = "";
+                    profileImage = this.configService.get<string>('BASE_URL') + this.configService.get<string>('DEFAULT_FEMALE_PROFILE');
+            }
+
+            let role = await this.roleRepo.findOne({ where: { name: body.role } });
+            if(!role) {
+                role = this.roleRepo.create({ name: body.role });
+                await this.roleRepo.save(role);
             }
 
             staff = this.staffRepo.create({
                 ...body,
+                role: role,
                 profile: profileImage,
             })
             await this.staffRepo.save(staff);
