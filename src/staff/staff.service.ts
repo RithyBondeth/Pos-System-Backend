@@ -53,10 +53,10 @@ export class StaffService {
         return { total: count };
     }
 
-    async findSorted(sortBy: string, orderBy: 'ASC' | 'DESC') {
+    async findSorted(query: SortStaffDto) {
         try {
             return this.staffRepo.find({
-              order: { [sortBy]: orderBy },
+              order: { [query.sortBy]: query.orderBy },
             });
           } catch (error) {
             console.error('Error sorting staff:', error);

@@ -8,12 +8,25 @@ import { UpdateStaffT } from './types/update-staff.type';
 import { DeleteStaffT } from './types/delete-staff.type';
 import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
+import { SortStaffDto } from './dtos/sort-staff.dto';
+import { RESOURCE_NAME, API_TAG_RESOURCE_NAME } from './staff.constant';
+import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller('staff')
+@ApiTags(API_TAG_RESOURCE_NAME)
+@Controller(RESOURCE_NAME)
 export class StaffController {
   constructor(private readonly staffService: StaffService) {}
 
   @Get('all')
+  @ApiOperation({ 
+    summary: 'Get all staff with pagination',
+    description: 'Retrieves a list of all staff members with optional filtering and paginating',
+  })
+  @ApiOkResponse({
+    type: [GetStaffDto],
+    description: 'List all staff retrieved successfully',
+  })
+  @ApiBadRequestResponse({ description: 'Invalid filter paramters' })
   async findAll(@Query() filter: FilterStaffDto): Promise<GetStaffDto[]> {
     return this.staffService.findAll(filter);
   }
@@ -24,8 +37,8 @@ export class StaffController {
   }
 
   @Get('sort')
-  async findSorted(@Query('sortBy') sortBy: string, @Query('orderBy') orderBy: 'ASC' | 'DESC' ) {
-      return this.staffService.findSorted(sortBy, orderBy);
+  async findSorted(@Query() query: SortStaffDto) {
+      return this.staffService.findSorted(query);
   }
 
   @Get(':id')
