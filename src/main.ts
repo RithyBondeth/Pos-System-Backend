@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { Logger } from 'nestjs-pino';
+import { SwaggerModule } from '@app/common/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -16,6 +17,9 @@ async function bootstrap() {
     forbidNonWhitelisted: true,
     enableDebugMessages: true
   }));
+
+  // Use SwaggerUI
+  SwaggerModule.setup(app);
 
   // Use Global Pino Logger
   const logger = app.get(Logger);

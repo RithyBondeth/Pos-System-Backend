@@ -15,6 +15,7 @@ import { UpdateStaffT } from './types/update-staff.type';
 import { DeleteStaffT } from './types/delete-staff.type';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
+import { SortStaffDto } from './dtos/sort-staff.dto';
 
 @Injectable()
 export class StaffService {
@@ -50,6 +51,17 @@ export class StaffService {
             }
         });
         return { total: count };
+    }
+
+    async findSorted(sortBy: string, orderBy: 'ASC' | 'DESC') {
+        try {
+            return this.staffRepo.find({
+              order: { [sortBy]: orderBy },
+            });
+          } catch (error) {
+            console.error('Error sorting staff:', error);
+            throw new Error('Failed to sort staff.');
+          }
     }
 
     async findOneById(staffId: number): Promise<GetStaffDto> {

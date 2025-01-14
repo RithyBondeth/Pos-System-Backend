@@ -1,7 +1,7 @@
 import { IsEnum, IsOptional, IsString } from "class-validator";
 import { GenderE, ShiftE } from "src/entities/staff/staff.type";
 
-export class CountQueryParamDTO {
+export class CountStaffQueryParamDTO {
     @IsEnum(GenderE, { message: "gender must be Male or Female" })
     @IsOptional()
     gender: GenderE;

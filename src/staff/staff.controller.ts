@@ -23,6 +23,11 @@ export class StaffController {
     return this.staffService.countStaff(query);
   }
 
+  @Get('sort')
+  async findSorted(@Query('sortBy') sortBy: string, @Query('orderBy') orderBy: 'ASC' | 'DESC' ) {
+      return this.staffService.findSorted(sortBy, orderBy);
+  }
+
   @Get(':id')
   async findOneById(@Param('id') staffId: number): Promise<GetStaffDto> {
     return this.staffService.findOneById(staffId);
