@@ -1,9 +1,7 @@
-import { IsEnum, IsOptional, IsString } from "class-validator";
+import { IsEnum, IsOptional } from "class-validator";
 
 enum SortByE {
     firstname = "firstname",
-    gender = "gender",
-    shift = "shift",
     salary = "salary",
 }
 
@@ -15,9 +13,9 @@ enum OrderByE {
 export class SortStaffDto {
     @IsEnum(SortByE)
     @IsOptional()
-    sortBy: SortByE;
+    sortBy: SortByE = SortByE.firstname;
 
     @IsEnum(OrderByE)
     @IsOptional()
-    orderBy: OrderByE;
+    orderBy: OrderByE = OrderByE.asc;
 }

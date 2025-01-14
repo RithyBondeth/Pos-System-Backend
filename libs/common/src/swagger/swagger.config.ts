@@ -13,4 +13,5 @@ export const swaggerOptions: SwaggerCustomOptions = {
         persistpersistAuthorization: true,
     },
     customSiteTitle: SWAGGER_API_TITLE,
+    useGlobalPrefix: true,
 }
