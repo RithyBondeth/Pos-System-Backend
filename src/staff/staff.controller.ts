@@ -10,7 +10,7 @@ import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { RESOURCE_NAME, API_TAG_RESOURCE_NAME } from './staff.constant';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -26,6 +26,7 @@ export class StaffController {
     type: [GetStaffDto],
     description: 'List all staff retrieved successfully',
   })
+  @ApiExtraModels(FilterStaffDto)
   @ApiBadRequestResponse({ description: 'Invalid filter paramters' })
   async findAll(@Query() filter: FilterStaffDto): Promise<GetStaffDto[]> {
     return this.staffService.findAll(filter);
