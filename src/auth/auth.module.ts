@@ -7,10 +7,11 @@ import { JwtModule } from '@app/common/jwt/jwt.module';
 import { StaffService } from 'src/staff/staff.service';
 import { Role } from 'src/entities/staff/role.entity';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
+import { CurrentStaffInterceptor } from './interceptors/current-staff.interceptor';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ Staff, Role ]), JwtModule],
   controllers: [AuthController],
-  providers: [AuthService, StaffService, UploadfileService],
+  providers: [AuthService, StaffService, UploadfileService, CurrentStaffInterceptor],
 })
 export class AuthModule {}

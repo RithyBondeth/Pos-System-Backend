@@ -9,6 +9,7 @@ import { AUTH_MESSAGE } from './auth.constant';
 import { LoginResponseDto } from './dtos/login-response.dto';
 import { RegisterRequestDto } from './dtos/register-request.dto';
 import { StaffService } from 'src/staff/staff.service';
+import { RegisterResponseDto } from './dtos/register-response.dto';
 
 @Injectable()
 export class AuthService {
@@ -41,15 +42,14 @@ export class AuthService {
             const token = await this.jwtService.generateToken(payload);
 
             //Return token with login credentials information
-            return {
-                token: token,
-                credential: {
-                    id: staff.id,
-                    firstname: staff.firstname,
-                    lastname: staff.lastname,
-                    role: staff.role.name,
-                }
+            const credential = {
+                id: staff.id,
+                firstname: staff.firstname,
+                lastname: staff.lastname,
+                role: staff.role.name,
             }
+            return new LoginResponseDto(token, credential);
+            
         } catch (error) {
             console.error('Failed to login: ', error.message);
             throw new UnauthorizedException(
@@ -60,7 +60,7 @@ export class AuthService {
         }
     } 
 
-    async register(body: RegisterRequestDto, profile: Express.Multer.File) {
+    async register(body: RegisterRequestDto, profile: Express.Multer.File): Promise<RegisterResponseDto> {
         return await this.staffService.createStaff(body, profile);
     }
 }
