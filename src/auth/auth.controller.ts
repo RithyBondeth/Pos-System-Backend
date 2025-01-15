@@ -1,7 +1,7 @@
 import { Body, Controller, Post, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { API_TAG_RESOURCE_NAME, LOGIN_RESOURCES, REGISTER_RESOURCES, RESOURCE_NAME } from './auth.constant';
-import { ApiBadRequestResponse, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConsumes, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import { LoginResponseDto } from './dtos/login-response.dto';
 import { RegisterRequestDto } from './dtos/register-request.dto';
@@ -32,6 +32,7 @@ export class AuthController {
     summary: REGISTER_RESOURCES.API_OPERATION.SUMMARY,
     description: REGISTER_RESOURCES.API_OPERATION.DESCRIPTION,
   })
+  @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
     type: RegisterResponseDto,
     description: REGISTER_RESOURCES.API_OKRES.DESCRIPTION,
