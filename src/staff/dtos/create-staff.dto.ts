@@ -1,4 +1,3 @@
-import { Type } from "class-transformer";
 import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsStrongPassword, Matches } from "class-validator";
 import { GenderE, ShiftE } from "src/entities/staff/staff.type";
 

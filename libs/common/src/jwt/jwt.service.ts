@@ -4,23 +4,24 @@ import { JwtService as NestJwtService } from '@nestjs/jwt';
 export type PayloadT = {
     id: number;
     firstname: string;  
+    lastname: string;
     role: string;
-    exp: number;
-    iat: number;
+    exp?: number;
+    iat?: number;
 }
 
 @Injectable()
 export class JwtService {
     constructor(private jwtService: NestJwtService) {}
 
-    async generateToken(payload: PayloadT): Promise<{ token: string }> {
-        const token = this.jwtService.sign(payload);
-        return { token: token };   
+    async generateToken(payload: PayloadT): Promise<string> {
+        const token = this.jwtService.signAsync(payload);
+        return token;
     }
 
     async verifyToken(token: string): Promise<any> {
        try {
-            return this.jwtService.verify(token);
+            return this.jwtService.verifyAsync(token);
        } catch (error) {
             console.error("Invalid token");
             throw new Error(error.message);
