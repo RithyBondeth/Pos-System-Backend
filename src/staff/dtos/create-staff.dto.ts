@@ -1,5 +1,5 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsPositive, IsString, IsStrongPassword, Matches } from "class-validator";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+import { IsDateString, IsEmail, IsEnum, IsNotEmpty, IsNumber, IsOptional, IsPositive, IsString, IsStrongPassword, Matches } from "class-validator";
 import { GenderE, ShiftE } from "src/entities/staff/staff.type";
 
 export class CreateStaffDto {
@@ -96,4 +96,14 @@ export class CreateStaffDto {
     @IsStrongPassword({ minLength: 8, minNumbers: 1, minUppercase: 1, minSymbols: 1 })
     @IsNotEmpty()
     password: string;
+
+    @ApiPropertyOptional({
+        description: "Staff profile",
+        type: 'string',
+        format: "binary",
+        example: "profiles/staff1_profile.jpg"
+    })
+    @IsString()
+    @IsOptional()
+    profile: string;
 }

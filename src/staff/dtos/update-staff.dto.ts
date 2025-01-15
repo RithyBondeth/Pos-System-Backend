@@ -86,4 +86,14 @@ export class UpdateStaffDto {
     @IsEmail()
     @IsOptional()
     email: string;
+
+    @ApiPropertyOptional({
+        description: "Staff profile",
+        type: 'string',
+        format: "binary",
+        example: "profiles/staff1_profile.jpg"
+    })
+    @IsString()
+    @IsOptional()
+    profile: string;
 }
