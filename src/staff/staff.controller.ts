@@ -8,7 +8,7 @@ import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES } from './staff.constant';
-import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -81,6 +81,7 @@ export class StaffController {
     summary: CREATE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
     description: CREATE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
   })
+  @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
     type: GetStaffDto,
     description: CREATE_STAFF_RESOURCES.API_OKRES.DESCRIPTION,
@@ -96,6 +97,7 @@ export class StaffController {
     summary: UPDATE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
     description: UPDATE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
   })
+  @ApiConsumes('multipart/form-data')
   @ApiOkResponse({
     type: GetStaffDto,
     description: UPDATE_STAFF_RESOURCES.API_OKRES.DESCRIPTION

@@ -99,6 +99,8 @@ export class CreateStaffDto {
 
     @ApiPropertyOptional({
         description: "Staff profile",
+        type: 'string',
+        format: "binary",
         example: "profiles/staff1_profile.jpg"
     })
     @IsString()
