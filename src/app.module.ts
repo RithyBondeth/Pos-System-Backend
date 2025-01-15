@@ -6,6 +6,7 @@ import { DatabaseModule, UploadfileModule } from '@app/common';
 import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { APP_INTERCEPTOR } from '@nestjs/core';
+import { AuthModule } from './auth/auth.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
       serveRoot: '/storage/',
     }),
     UploadfileModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [
