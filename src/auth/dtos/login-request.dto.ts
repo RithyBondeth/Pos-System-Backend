@@ -12,8 +12,9 @@ export class LoginRequestDto {
     email: string; 
 
     @ApiProperty({
-        description: "Password of the staff (Number including at least one uppercase character and special characters)",
-        example: "Bondeth@12345"
+        description: "Password of the staff",
+        example: "Bondeth@12345",
+        pattern: "At least 1 number, 1 uppercase, 1 symbol",
     })
     @IsStrongPassword()
     @IsNotEmpty()
