@@ -28,7 +28,10 @@ export class JwtService {
        } 
     }
 
-    async decodeToken(token: string): Promise<PayloadT> {
-        return this.jwtService.decode(token) as PayloadT;
+    decodeToken(token: string): PayloadT {
+        const decode = this.jwtService.decode(token);
+        if(!decode) throw new Error("Failed to decode token");
+        
+        return decode as PayloadT;
     }
 }

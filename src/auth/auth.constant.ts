@@ -35,3 +35,16 @@ export const REGISTER_RESOURCES = {
         DESCRIPTION: "Invalid email or password provided",
     }
 }
+
+export const CURRENT_STAFF_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: "Get current staff",
+        DESCRIPTION: "Get the current authenticated staff by token",
+    },
+    API_OKRES: {
+        DESCRIPTION: "Current staff retrieved successfully",
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: "Invalid token provided",
+    }
+}

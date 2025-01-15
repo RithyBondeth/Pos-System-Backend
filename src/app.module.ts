@@ -7,6 +7,9 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { join } from 'path';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { AuthModule } from './auth/auth.module';
+import { CurrentStaffInterceptor } from './auth/interceptors/current-staff.interceptor';
+import { JwtModule } from '@nestjs/jwt';
+import { JwtService } from '@app/common/jwt/jwt.service';
 
 @Module({
   imports: [
@@ -19,6 +22,7 @@ import { AuthModule } from './auth/auth.module';
       serveRoot: '/storage/',
     }),
     UploadfileModule,
+    JwtModule,
     AuthModule
   ],
   controllers: [],
@@ -26,7 +30,12 @@ import { AuthModule } from './auth/auth.module';
     {
       provide: APP_INTERCEPTOR,
       useClass: ClassSerializerInterceptor,
-    }
+    },
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: CurrentStaffInterceptor,
+    },
+    JwtService
   ],
 })
 export class AppModule {}

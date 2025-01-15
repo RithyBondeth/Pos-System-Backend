@@ -32,6 +32,10 @@ class Credential {
     })
     @IsString()
     role: string;
+
+    constructor(partial: Partial<Credential>) {
+        return Object.assign(this, partial);
+    }
 }
 
 export class LoginResponseDto {
@@ -53,4 +57,10 @@ export class LoginResponseDto {
     })
     @Type(() => Credential)
     credential: Credential
+
+    constructor(token: string, credential: Partial<Credential>) {
+        this.token = token;
+        this.credential = new Credential(credential);
+        return this;
+    }
 }
