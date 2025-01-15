@@ -1,4 +1,4 @@
-import { BadRequestException, ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, ConflictException, Get, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Staff } from 'src/entities/staff/staff.entity';
 import { Repository } from 'typeorm';
@@ -10,11 +10,8 @@ import { Role } from 'src/entities/staff/role.entity';
 import { ConfigService } from '@nestjs/config';
 import { GetStaffDto } from './dtos/get-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
-import { CreateStaffT } from './types/create-staff.type';
-import { UpdateStaffT } from './types/update-staff.type';
-import { DeleteStaffT } from './types/delete-staff.type';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
-import { CountStaffQueryParamDTO } from './dtos/count-staff.dto';
+import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 
 @Injectable()
@@ -42,25 +39,29 @@ export class StaffService {
         return staff.map((staff) => new GetStaffDto(staff));
     }
 
-    async countStaff(query: CountStaffQueryParamDTO): Promise<{ total: number }> {
-        const count = await this.staffRepo.count({
+    async countStaff(query: CountStaffQueryParamDTO): Promise<CountStaffDto> {
+        const total = await this.staffRepo.count({
             where: {
                 ...(query.gender ? { gender: query.gender } : {}),
                 ...(query.role ? { role: { name: query.role } } : {}),
                 ...(query.shift ? { shift: query.shift } : {}),
             }
         });
-        return { total: count };
+        return new CountStaffDto(total);
     }
 
     async findSorted(query: SortStaffDto) {
         try {
-            return this.staffRepo.find({
-              order: { [query.sortBy]: query.orderBy },
-            });
+            const sortedStaff = await this.staffRepo.find({ 
+                relations: ['role'],
+                order: { [query.sortBy]: query.orderBy 
+            }});
+            if(sortedStaff.length === 0) throw new NotFoundException("There are no staff available");
+
+            return sortedStaff.map((staff) => new GetStaffDto(staff));
           } catch (error) {
-            console.error('Error sorting staff:', error);
-            throw new Error('Failed to sort staff.');
+            console.error('Failed to sort staff: ', error.message);
+            throw new BadRequestException(error.message);
           }
     }
 
@@ -71,7 +72,7 @@ export class StaffService {
         return new GetStaffDto(staff);
     }
 
-    async createStaff(body: CreateStaffDto, profile: Express.Multer.File): Promise<CreateStaffT> {
+    async createStaff(body: CreateStaffDto, profile: Express.Multer.File): Promise<GetStaffDto> {
         try {
             let staff = await this.staffRepo.findOne({ where: { email: body.email } });
             if(staff) {
@@ -105,17 +106,14 @@ export class StaffService {
             })
             await this.staffRepo.save(staff);
 
-            return {
-                message: "Created Staff Successfully",
-                staff: new GetStaffDto(staff),
-            }
+            return new GetStaffDto(staff);
         } catch (error) {
             console.error("Failed to create staff: ", error.message);
             throw new BadRequestException(error.message);
         }      
     }
 
-    async updateStaff(staffId: number, body: UpdateStaffDto, profile: Express.Multer.File): Promise<UpdateStaffT> {
+    async updateStaff(staffId: number, body: UpdateStaffDto, profile: Express.Multer.File): Promise<GetStaffDto> {
         try {
             //Find staff to update by ID
             let staff = await this.staffRepo.findOne({ where: { id: staffId }, relations: ['role'] });
@@ -174,18 +172,15 @@ export class StaffService {
             //Save the updated staff to the database
             await this.staffRepo.save(staff);
             
-            //Return the updated staff with message
-            return {
-                message: "Updated Staff Successfully",
-                staff: new GetStaffDto(staff),
-            }
+            //Return the updated staff
+            return new GetStaffDto(staff);
         } catch (error) {
             console.error("Failed to update staff: ", error.message);
             throw new BadRequestException(error.message);
         }
     }
 
-    async deleteStaff(staffId: number): Promise<DeleteStaffT> {
+    async deleteStaff(staffId: number): Promise<GetStaffDto> {
        try {
             //Find staff by Id
             const staff = await this.staffRepo.findOne({ where: { id: staffId }});
@@ -200,11 +195,8 @@ export class StaffService {
             //Delete staff from database
             await this.staffRepo.delete({ id: staffId });
 
-            //Return success message
-            return  {
-                message: "Deleted Staff Successfully",
-                staff: new GetStaffDto(staff)
-            }
+            //Return deleted staff
+            return new GetStaffDto(staff);
        } catch (error) {
             console.error('Failed to delete staff: ', error.message);
             throw new BadRequestException(error.message);
