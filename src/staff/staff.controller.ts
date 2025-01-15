@@ -8,7 +8,7 @@ import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES } from './staff.constant';
-import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
