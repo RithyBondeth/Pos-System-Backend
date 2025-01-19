@@ -8,9 +8,10 @@ import { StaffService } from 'src/staff/staff.service';
 import { Role } from '@app/common/database/entities/staff/role.entity';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
 import { CurrentStaffInterceptor } from './interceptors/current-staff.interceptor';
+import { EmailConfigModule } from '@app/common/email/email-config.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([ Staff, Role ]), JwtModule],
+  imports: [TypeOrmModule.forFeature([ Staff, Role ]), JwtModule, EmailConfigModule],
   controllers: [AuthController],
   providers: [AuthService, StaffService, UploadfileService, CurrentStaffInterceptor],
 })
