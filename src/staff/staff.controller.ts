@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseGuards, UseInterceptors } from '@nestjs/common';
 import { StaffService } from './staff.service';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
@@ -8,7 +8,9 @@ import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES } from './staff.constant';
-import { ApiBadRequestResponse, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { StaffRole } from 'src/auth/decorators/role-staff.decorator';
+import { AuthGuard } from 'src/auth/guards/auth.guard';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -76,7 +78,10 @@ export class StaffController {
     return this.staffService.findOneById(staffId);
   }
 
+  @StaffRole('Manager')
+  @UseGuards(AuthGuard)
   @Post('create')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: CREATE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
     description: CREATE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,

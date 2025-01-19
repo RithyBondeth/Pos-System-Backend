@@ -1,7 +1,7 @@
 import { JwtService, PayloadT } from '@app/common/jwt/jwt.service';
 import { Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from 'src/entities/staff/staff.entity';
+import { Staff } from '@app/common/database/entities/staff/staff.entity';
 import { Repository } from 'typeorm';
 import { LoginRequestDto } from './dtos/login-request.dto';
 import * as bcrypt from 'bcrypt';

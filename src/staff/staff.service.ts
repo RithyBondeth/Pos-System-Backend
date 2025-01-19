@@ -1,12 +1,12 @@
 import { BadRequestException, ConflictException, Get, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Staff } from 'src/entities/staff/staff.entity';
+import { Staff } from '@app/common/database/entities/staff/staff.entity';
 import { Repository } from 'typeorm';
 import { CreateStaffDto } from './dtos/create-staff.dto';
 import * as path from 'path';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
-import { GenderE } from 'src/entities/staff/staff.type';
-import { Role } from 'src/entities/staff/role.entity';
+import { GenderE } from '@app/common/database/entities/staff/staff.type';
+import { Role } from '@app/common/database/entities/staff/role.entity';
 import { ConfigService } from '@nestjs/config';
 import { GetStaffDto } from './dtos/get-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
