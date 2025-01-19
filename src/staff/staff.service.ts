@@ -13,6 +13,7 @@ import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
+import { ChangeStaffRoleDto } from './dtos/change-role-staff.dto';
 
 @Injectable()
 export class StaffService {
@@ -201,5 +202,33 @@ export class StaffService {
             console.error('Failed to delete staff: ', error.message);
             throw new BadRequestException(error.message);
        }
+    }
+
+    async changeRole(body: ChangeStaffRoleDto): Promise<GetStaffDto> {
+        try {
+            console.log("Change staff role service");
+            //Find staff by ID and email to ensure they exist and are valid.
+            const staff = await this.staffRepo.findOne({ 
+                relations: ['role'],
+                where: { id: body.staffId, email: body.email }
+            });
+            if(!staff) throw new NotFoundException(`There is no staff with id ${body.staffId} or email ${body.email}`);
+            
+            //Find new role by name to ensure it exists.
+            let newRole = await this.roleRepo.findOne({ where: { name: body.newRole } });
+            if(!newRole) {
+                newRole = this.roleRepo.create({ name: body.newRole });
+                await this.roleRepo.save(newRole);
+            }            
+
+            //Change role
+            staff.role = newRole;
+            await this.staffRepo.save(staff);
+
+            return new GetStaffDto(staff);
+        } catch(error) {
+            console.error('Failed to change role: ', error.message);
+            throw new BadRequestException(error.message);
+        }
     }
 }

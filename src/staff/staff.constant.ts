@@ -91,3 +91,16 @@ export const DELETE_STAFF_RESOURCES = {
         DESCRIPTION: "Invalid staff id provided",
     }
 }
+
+export const CHANGE_ROLE_STAFF_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: "Change staff role",
+        DESCRIPTION: "Changes the role of a staff member by their id and email",
+    },
+    API_OKRES: {
+        DESCRIPTION: "Staff role changed successfully",
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: "Invalid staff email or id provided",
+    }
+}
