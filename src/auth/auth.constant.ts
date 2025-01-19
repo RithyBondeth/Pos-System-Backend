@@ -7,7 +7,8 @@ export const AUTH_MESSAGE = {
     USER_NOT_FOUND: 'User not found',
     UNAUTHORIZED: 'Unauthorized access',
     TOKEN_EXPIRED: 'Token has expired',
-    INVALID_TOKEN: 'Invalid token'
+    INVALID_TOKEN: 'Invalid token',
+    INSUFFICIENT: 'Insufficient permissions',
 }
 
 export const LOGIN_RESOURCES = {

@@ -1,7 +1,7 @@
 import { ApiHideProperty, ApiProperty } from "@nestjs/swagger";
 import { Exclude, Expose } from "class-transformer";
 import { IsDateString, IsEmail, IsEnum, IsNumber, IsString, Matches } from "class-validator";
-import { GenderE, ShiftE } from "src/entities/staff/staff.type";
+import { GenderE, ShiftE } from "@app/common/database/entities/staff/staff.type";
 
 export class GetRoleDto {
     @ApiHideProperty()

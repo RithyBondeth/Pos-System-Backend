@@ -1,6 +1,6 @@
 import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 import { IsEnum, IsNumber, IsOptional, IsString } from "class-validator";
-import { GenderE, ShiftE } from "src/entities/staff/staff.type";
+import { GenderE, ShiftE } from "@app/common/database/entities/staff/staff.type";
 
 export class CountStaffQueryParamDTO {
     @ApiPropertyOptional({ 

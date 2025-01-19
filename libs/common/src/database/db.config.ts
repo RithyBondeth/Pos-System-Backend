@@ -1,12 +1,12 @@
 import { ConfigService } from "@nestjs/config";
-import { Customer } from "src/entities/customer/customer.entity";
-import { Inventory } from "src/entities/inventory/inventory.entity";
-import { Category } from "src/entities/product/category.entity";
-import { Product } from "src/entities/product/product.entity";
-import { Role } from "src/entities/staff/role.entity";
-import { Staff } from "src/entities/staff/staff.entity";
-import { Transaction } from "src/entities/transaction/transaction.entity";
-import { TransactionItem } from "src/entities/transaction/transactionItem.entity";
+import { Customer } from "@app/common/database/entities/customer/customer.entity";
+import { Inventory } from "@app/common/database/entities/inventory/inventory.entity";
+import { Category } from "@app/common/database/entities/product/category.entity";
+import { Product } from "@app/common/database/entities/product/product.entity";
+import { Role } from "@app/common/database/entities/staff/role.entity";
+import { Staff } from "@app/common/database/entities/staff/staff.entity";
+import { Transaction } from "@app/common/database/entities/transaction/transaction.entity";
+import { TransactionItem } from "@app/common/database/entities/transaction/transactionItem.entity";
 import { PostgresConnectionOptions } from "typeorm/driver/postgres/PostgresConnectionOptions";
 
 export const dbConfig = async (configService: ConfigService): Promise<PostgresConnectionOptions>=> ({
