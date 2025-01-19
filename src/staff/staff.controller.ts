@@ -7,10 +7,11 @@ import { GetStaffDto } from './dtos/get-staff.dto';
 import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
-import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES } from './staff.constant';
+import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES, CHANGE_ROLE_STAFF_RESOURCES } from './staff.constant';
 import { ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { StaffRole } from 'src/auth/decorators/role-staff.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
+import { ChangeStaffRoleDto } from './dtos/change-role-staff.dto';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -78,7 +79,7 @@ export class StaffController {
     return this.staffService.findOneById(staffId);
   }
 
-  @StaffRole('Manager')
+  @StaffRole('Admin')
   @UseGuards(AuthGuard)
   @Post('create')
   @ApiBearerAuth()
@@ -97,7 +98,27 @@ export class StaffController {
     return this.staffService.createStaff(body, profile);
   }
 
+  @StaffRole('Admin')
+  @UseGuards(AuthGuard)
+  @Put('change-role')
+  @ApiBearerAuth()
+  @ApiOperation({
+    summary: CHANGE_ROLE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
+    description: CHANGE_ROLE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
+  })
+  @ApiOkResponse({
+    type: GetStaffDto,
+    description: CHANGE_ROLE_STAFF_RESOURCES.API_OKRES.DESCRIPTION
+  })
+  @ApiBadRequestResponse({ description: CHANGE_ROLE_STAFF_RESOURCES.API_BAD_REQRES.DESCRIPTION })
+  async changeRole(@Body() body: ChangeStaffRoleDto) {
+    return this.staffService.changeRole(body);
+  }
+
+  @StaffRole('Admin')
+  @UseGuards(AuthGuard)
   @Put('update/:id')
+  @ApiBearerAuth()
   @ApiOperation({
     summary: UPDATE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
     description: UPDATE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
@@ -117,7 +138,10 @@ export class StaffController {
     return this.staffService.updateStaff(staffId, body, profile);
   }
 
+  @StaffRole('Admin')
+  @UseGuards(AuthGuard)
   @Delete('delete/:id') 
+  @ApiBearerAuth()
   @ApiOperation({
     summary: DELETE_STAFF_RESOURCES.API_OPERATION.SUMMARY,
     description: DELETE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
@@ -127,7 +151,7 @@ export class StaffController {
     description: DELETE_STAFF_RESOURCES.API_OKRES.DESCRIPTION
   })
   @ApiBadRequestResponse({ description: DELETE_STAFF_RESOURCES.API_BAD_REQRES.DESCRIPTION })
-  deleteStaff(@Param('id', ParseIntPipe) staffId: number): Promise<GetStaffDto> {
+  async deleteStaff(@Param('id', ParseIntPipe) staffId: number): Promise<GetStaffDto> {
     return this.staffService.deleteStaff(staffId);
   }
 }
