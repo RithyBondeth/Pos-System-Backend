@@ -10,6 +10,7 @@ import { AuthModule } from './auth/auth.module';
 import { CurrentStaffInterceptor } from './auth/interceptors/current-staff.interceptor';
 import { JwtModule } from '@nestjs/jwt';
 import { JwtService } from '@app/common/jwt/jwt.service';
+import { EmailConfigModule } from '@app/common/email/email-config.module';
 
 @Module({
   imports: [
@@ -23,7 +24,7 @@ import { JwtService } from '@app/common/jwt/jwt.service';
     }),
     UploadfileModule,
     JwtModule,
-    AuthModule
+    AuthModule,
   ],
   controllers: [],
   providers: [

@@ -49,3 +49,29 @@ export const CURRENT_STAFF_RESOURCES = {
         DESCRIPTION: "Invalid token provided",
     }
 }
+
+export const FORGOT_PASSWORD_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: "Forgot password",
+        DESCRIPTION: "Send a reset token to the provided email",
+    },
+    API_OKRES: {
+        DESCRIPTION: "Reset password token sent successfully to the provided email",
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: "Invalid email provided",
+    }
+}
+
+export const RESET_PASSWORD_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: "Reset password",
+        DESCRIPTION: "Reset the password using the provided reset token",
+    },
+    API_OKRES: {
+        DESCRIPTION: "Password reset successfully",
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: "Invalid reset token provided",
+    }
+}
