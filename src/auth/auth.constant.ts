@@ -62,3 +62,16 @@ export const FORGOT_PASSWORD_RESOURCES = {
         DESCRIPTION: "Invalid email provided",
     }
 }
+
+export const RESET_PASSWORD_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: "Reset password",
+        DESCRIPTION: "Reset the password using the provided reset token",
+    },
+    API_OKRES: {
+        DESCRIPTION: "Password reset successfully",
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: "Invalid reset token provided",
+    }
+}
