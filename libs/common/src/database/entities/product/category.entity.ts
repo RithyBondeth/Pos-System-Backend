@@ -10,7 +10,7 @@ export class Category {
     name: string;
 
     @Column('text', { nullable: true })
-    desciption: string;
+    description: string;
 
     @Column({ nullable: true })
     image: string;
