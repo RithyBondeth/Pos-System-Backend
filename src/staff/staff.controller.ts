@@ -12,6 +12,7 @@ import { ApiBadRequestResponse, ApiBearerAuth, ApiConsumes, ApiExtraModels, ApiO
 import { StaffRole } from 'src/auth/decorators/role-staff.decorator';
 import { AuthGuard } from 'src/auth/guards/auth.guard';
 import { ChangeStaffRoleDto } from './dtos/change-role-staff.dto';
+import { DeleteStaffResponseDto } from './dtos/delete-staff-response.dto';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -147,11 +148,11 @@ export class StaffController {
     description: DELETE_STAFF_RESOURCES.API_OPERATION.DESCRIPTION,
   })
   @ApiOkResponse({
-    type: GetStaffDto,
+    type: DeleteStaffResponseDto,
     description: DELETE_STAFF_RESOURCES.API_OKRES.DESCRIPTION
   })
   @ApiBadRequestResponse({ description: DELETE_STAFF_RESOURCES.API_BAD_REQRES.DESCRIPTION })
-  async deleteStaff(@Param('id', ParseIntPipe) staffId: number): Promise<GetStaffDto> {
+  async deleteStaff(@Param('id', ParseIntPipe) staffId: number): Promise<DeleteStaffResponseDto> {
     return this.staffService.deleteStaff(staffId);
   }
 }

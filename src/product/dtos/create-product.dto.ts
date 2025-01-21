@@ -41,7 +41,6 @@ export class CreateProductDto {
       example: 2350.00
     })
     @IsNumber()
-    @IsPositive()
     @IsNotEmpty()
     price: number;
 
@@ -51,7 +50,6 @@ export class CreateProductDto {
     })
     @IsNumber()
     @IsInt()
-    @IsPositive()
     @IsNotEmpty()
     stockQuantity: number;
 }

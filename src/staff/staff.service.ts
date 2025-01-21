@@ -14,6 +14,7 @@ import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { ChangeStaffRoleDto } from './dtos/change-role-staff.dto';
+import { DeleteStaffResponseDto } from './dtos/delete-staff-response.dto';
 
 @Injectable()
 export class StaffService {
@@ -153,6 +154,7 @@ export class StaffService {
                 const role = await this.roleRepo.findOne({ where: { name: body.role } });
                 if(!role) throw new NotFoundException(`There is no ${body.role}. Please create a new role first`);
 
+                //Save role
                 staff.role = role;          
             }
 
@@ -166,7 +168,7 @@ export class StaffService {
             //staff.lastname = body.lastname
             Object.entries(body).forEach(([key, value]) => {
                 if(value !== undefined && updatableFields.includes(key)) {
-                    staff[key] = value;
+                    staff[key] = value || staff[value];
                 }
             })
             
@@ -181,7 +183,7 @@ export class StaffService {
         }
     }
 
-    async deleteStaff(staffId: number): Promise<GetStaffDto> {
+    async deleteStaff(staffId: number): Promise<DeleteStaffResponseDto> {
        try {
             //Find staff by Id
             const staff = await this.staffRepo.findOne({ where: { id: staffId }});
@@ -197,7 +199,7 @@ export class StaffService {
             await this.staffRepo.delete({ id: staffId });
 
             //Return deleted staff
-            return new GetStaffDto(staff);
+            return { message: 'Staff has been deleted successfull' };
        } catch (error) {
             console.error('Failed to delete staff: ', error.message);
             throw new BadRequestException(error.message);
@@ -225,6 +227,7 @@ export class StaffService {
             staff.role = newRole;
             await this.staffRepo.save(staff);
 
+            //Return updated role staff
             return new GetStaffDto(staff);
         } catch(error) {
             console.error('Failed to change role: ', error.message);
