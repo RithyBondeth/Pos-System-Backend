@@ -1,5 +1,4 @@
-export const API_TAG_RESOURCE_NAME = "Auth API Resource";
-
+export const API_TAG_RESOURCE_NAME = "Auth API Resources";
 export const RESOURCE_NAME = "auth";
 
 export const AUTH_MESSAGE = {
