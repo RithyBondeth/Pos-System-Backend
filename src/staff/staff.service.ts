@@ -11,7 +11,7 @@ import { ConfigService } from '@nestjs/config';
 import { GetStaffDto } from './dtos/get-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
-import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
+import { CountStaffResponseDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { ChangeStaffRoleDto } from './dtos/change-role-staff.dto';
 import { DeleteStaffResponseDto } from './dtos/delete-staff-response.dto';
@@ -41,7 +41,7 @@ export class StaffService {
         return staff.map((staff) => new GetStaffDto(staff));
     }
 
-    async countStaff(query: CountStaffQueryParamDTO): Promise<CountStaffDto> {
+    async countStaff(query: CountStaffQueryParamDTO): Promise<CountStaffResponseDto> {
         const total = await this.staffRepo.count({
             where: {
                 ...(query.gender ? { gender: query.gender } : {}),
@@ -49,7 +49,7 @@ export class StaffService {
                 ...(query.shift ? { shift: query.shift } : {}),
             }
         });
-        return new CountStaffDto(total);
+        return new CountStaffResponseDto(total);
     }
 
     async findSorted(query: SortStaffDto) {
@@ -185,7 +185,7 @@ export class StaffService {
 
     async deleteStaff(staffId: number): Promise<DeleteStaffResponseDto> {
        try {
-            //Find staff by Id
+            //Find staff by Id if it exists
             const staff = await this.staffRepo.findOne({ where: { id: staffId }});
             if(!staff) throw new NotFoundException(`There is no staff with id ${staffId}`); 
 
