@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { API_TAG_RESOURCE_NAME, COUNT_PRODUCT_RESOURCES, CREATE_PRODUCT_RESOURCE, DELETE_PRODUCT_RESOURCE, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCE } from './product.constant';
+import { API_TAG_RESOURCE_NAME, COUNT_PRODUCT_RESOURCES, CREATE_PRODUCT_RESOURCES, DELETE_PRODUCT_RESOURCES, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SEARCH_PRODUCT_RESOURCES, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCES } from './product.constant';
 import { ApiBadRequestResponse, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
 import { CreateProductDto } from './dtos/create-product.dto';
@@ -10,6 +10,8 @@ import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
 import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
+import { SearchProductRequestDto } from './dtos/search-product-request.dto';
+import { SearchProductResponseDto } from './dtos/search-product-response.dto';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -63,6 +65,21 @@ export class ProductController {
     return this.productService.countProduct(query);
   }
 
+  @Get('search')
+  @ApiOperation({
+    summary: SEARCH_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
+    description: SEARCH_PRODUCT_RESOURCES.API_OPERATION.DESCRIPTION,
+  })
+  @ApiExtraModels(SearchProductRequestDto)
+  @ApiOkResponse({ 
+    type: SearchProductResponseDto,
+    description: SEARCH_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION,
+  })
+  @ApiBadRequestResponse({ description: SEARCH_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
+  async searchProduct(@Query() query: SearchProductRequestDto): Promise<SearchProductResponseDto> {
+    return this.productService.searchProduct(query);
+  }
+
   @Get(':id')
   @ApiOperation({
     summary: FINDONE_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
@@ -80,14 +97,14 @@ export class ProductController {
   @Post('create')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({
-    summary: CREATE_PRODUCT_RESOURCE.API_OPERATION.SUMMARY,
-    description: CREATE_PRODUCT_RESOURCE.API_OPERATION.DESCRIPTION,
+    summary: CREATE_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
+    description: CREATE_PRODUCT_RESOURCES.API_OPERATION.DESCRIPTION,
   })
   @ApiOkResponse({
     type: GetProductDto,
-    description: CREATE_PRODUCT_RESOURCE.API_OKRES.DESCRIPTION,
+    description: CREATE_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION,
   })
-  @ApiBadRequestResponse({ description: CREATE_PRODUCT_RESOURCE.API_BAD_REQRES.DESCRIPTION })
+  @ApiBadRequestResponse({ description: CREATE_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
   @UseInterceptors(new UploadFileInterceptor('image', 'products'))
   async createProduct(@Body() body: CreateProductDto, @UploadedFile() image: Express.Multer.File): Promise<GetProductDto> {
     return this.productService.createProduct(body, image);
@@ -96,14 +113,14 @@ export class ProductController {
   @Put('update/:id')
   @ApiConsumes('multipart/form-data')
   @ApiOperation({
-    summary: UPDATE_PRODUCT_RESOURCE.API_OPERATION.SUMMARY,
-    description: UPDATE_PRODUCT_RESOURCE.API_OPERATION.DESCRIPTION,
+    summary: UPDATE_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
+    description: UPDATE_PRODUCT_RESOURCES.API_OPERATION.DESCRIPTION,
   })
   @ApiOkResponse({
     type: GetProductDto,
-    description: UPDATE_PRODUCT_RESOURCE.API_OKRES.DESCRIPTION
+    description: UPDATE_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION
   })
-  @ApiBadRequestResponse({ description: UPDATE_PRODUCT_RESOURCE.API_BAD_REQRES.DESCRIPTION })
+  @ApiBadRequestResponse({ description: UPDATE_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
   @UseInterceptors(new UploadFileInterceptor('image', 'products'))
   async updateProduct(
     @Param('id', ParseIntPipe) productId: number,
@@ -115,14 +132,14 @@ export class ProductController {
 
   @Delete('delete/:id')
   @ApiOperation({
-    summary: DELETE_PRODUCT_RESOURCE.API_OPERATION.SUMMARY,
-    description: DELETE_PRODUCT_RESOURCE.API_OPERATION.DESCRIPTION,
+    summary: DELETE_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
+    description: DELETE_PRODUCT_RESOURCES.API_OPERATION.DESCRIPTION,
   })
   @ApiOkResponse({
     type: DeleteProductResponseDto,
-    description: DELETE_PRODUCT_RESOURCE.API_OKRES.DESCRIPTION
+    description: DELETE_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION
   })
-  @ApiBadRequestResponse({ description: DELETE_PRODUCT_RESOURCE.API_BAD_REQRES.DESCRIPTION })
+  @ApiBadRequestResponse({ description: DELETE_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
   async deleteProduct(@Param('id', ParseIntPipe) productId: number): Promise<DeleteProductResponseDto> {
     return this.productService.deleteProduct(productId);
   }
