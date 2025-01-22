@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { API_TAG_RESOURCE_NAME, CREATE_PRODUCT_RESOURCE, DELETE_PRODUCT_RESOURCE, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCE } from './product.constant';
+import { API_TAG_RESOURCE_NAME, COUNT_PRODUCT_RESOURCES, CREATE_PRODUCT_RESOURCE, DELETE_PRODUCT_RESOURCE, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCE } from './product.constant';
 import { ApiBadRequestResponse, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
 import { CreateProductDto } from './dtos/create-product.dto';
@@ -9,6 +9,7 @@ import { PaginationProductDto } from './dtos/pagination-product.dto';
 import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
+import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -45,6 +46,21 @@ export class ProductController {
   @ApiBadRequestResponse({ description: SORT_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
   async sortProduct(@Query() sort: SortProductDto): Promise<GetProductDto[]> {
       return this.productService.sortProduct(sort);
+  }
+
+  @Get('count') 
+  @ApiOperation({
+    summary: COUNT_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,
+    description: COUNT_PRODUCT_RESOURCES.API_OPERATION.DESCRIPTION,
+  })
+  @ApiExtraModels(CountProductQueryParamDto)
+  @ApiOkResponse({
+    type: CountProductResponseDto,
+    description: COUNT_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION,
+  })
+  @ApiBadRequestResponse({ description: COUNT_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
+  async countProduct(@Query() query: CountProductQueryParamDto): Promise<CountProductResponseDto> {
+    return this.productService.countProduct(query);
   }
 
   @Get(':id')

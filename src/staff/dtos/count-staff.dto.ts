@@ -30,7 +30,7 @@ export class CountStaffQueryParamDTO {
     shift: ShiftE;
 }
 
-export class CountStaffDto {
+export class CountStaffResponseDto {
     @ApiProperty({
         description: "Total number of staff matching the filter criteria",
         minimum: 0,

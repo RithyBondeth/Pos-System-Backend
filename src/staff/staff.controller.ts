@@ -4,7 +4,7 @@ import { CreateStaffDto } from './dtos/create-staff.dto';
 import { UpdateStaffDto } from './dtos/update-staff.dto';
 import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
 import { GetStaffDto } from './dtos/get-staff.dto';
-import { CountStaffDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
+import { CountStaffResponseDto, CountStaffQueryParamDTO } from './dtos/count-staff.dto';
 import { FilterStaffDto } from './dtos/filter-staff.dto';
 import { SortStaffDto } from './dtos/sort-staff.dto';
 import { RESOURCE_NAME, API_TAG_RESOURCE_NAME, GET_ALL_STAFF_RESOURCES, COUNT_STAFF_RESOURCES, SORT_STAFF_RESOURCES, GET_ONESTAFF_BYID_RESOURCES, CREATE_STAFF_RESOURCES, UPDATE_STAFF_RESOURCES, DELETE_STAFF_RESOURCES, CHANGE_ROLE_STAFF_RESOURCES } from './staff.constant';
@@ -41,12 +41,12 @@ export class StaffController {
     description: COUNT_STAFF_RESOURCES.API_OPERATION.DESCRIPTION
   })
   @ApiOkResponse({ 
-    type: CountStaffDto,
+    type: CountStaffResponseDto,
     description: COUNT_STAFF_RESOURCES.API_OKRES.DESCRIPTION
   })
   @ApiExtraModels(CountStaffQueryParamDTO)
   @ApiBadRequestResponse({ description: COUNT_STAFF_RESOURCES.API_BAD_REQRES.DESCRIPTION })
-  async countStaff(@Query() query: CountStaffQueryParamDTO): Promise<CountStaffDto> {
+  async countStaff(@Query() query: CountStaffQueryParamDTO): Promise<CountStaffResponseDto> {
     return this.staffService.countStaff(query);
   }
 

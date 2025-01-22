@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable, NotFoundException }
 import { CreateProductDto } from './dtos/create-product.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Product } from '@app/common/database/entities/product/product.entity';
-import { Repository } from 'typeorm';
+import { Not, Repository } from 'typeorm';
 import * as path from 'path';
 import { UploadfileService } from '@app/common/uploadfile/uploadfile.service';
 import { Category } from '@app/common/database/entities/product/category.entity';
@@ -11,6 +11,7 @@ import { PaginationProductDto } from './dtos/pagination-product.dto';
 import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
+import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -128,13 +129,13 @@ export class ProductService {
             
             //Handle product image
             if(image) {
-              const imagePath = path.join(process.cwd(), 'storage/products', image.filename);
               if(product.image) {
                 //Delete the old product image if it exists
                 const oldImagePath = path.join(process.cwd(), 'storage/products', product.image.split('/').pop());
                 UploadfileService.deleteFile(oldImagePath, 'Product Image');
               }
               //Save new image
+              const imagePath = path.join(process.cwd(), 'storage/products', image.filename);
               product.image = imagePath;
             }  
             
@@ -188,6 +189,23 @@ export class ProductService {
             return { message: 'Product has been deleted successfully' };
         } catch (error) {
             console.error('Failed to delete product: ', error.message);
+            throw new BadRequestException(error.message);
+        }
+    }
+
+    async countProduct(query: CountProductQueryParamDto): Promise<CountProductResponseDto> {
+        try {
+            //Find total number of products
+            const total = await this.productRepo.count({
+                where: {
+                    ...(query.category ? { category: { name: query.category } } : {})
+                }
+            });
+            if(total === 0) throw new NotFoundException('There are no products available');
+            //Return total number of products
+            return new CountProductResponseDto(total);
+        } catch (error) {  
+            console.error('Failed to count products: ', error.message);
             throw new BadRequestException(error.message);
         }
     }

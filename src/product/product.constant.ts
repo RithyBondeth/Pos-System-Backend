@@ -40,6 +40,19 @@ export const SORT_PRODUCT_RESOURCES = {
     },
 }
 
+export const COUNT_PRODUCT_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: 'Count products',
+        DESCRIPTION: 'Counts the number of products based on provided filters',
+    },
+    API_OKRES: {
+        DESCRIPTION: 'Total number of products retrieved successfully',
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: 'Invalid filter parameters provided',
+    },
+}
+
 export const CREATE_PRODUCT_RESOURCE = {
     API_OPERATION: {
         SUMMARY: 'Create new product',
