@@ -8,4 +8,8 @@ export class DeleteProductResponseDto {
     })
     @IsString()
     message: string;
+
+    constructor(partial: Partial<DeleteProductResponseDto>) {
+        return Object.assign(this, partial);
+    }
 }

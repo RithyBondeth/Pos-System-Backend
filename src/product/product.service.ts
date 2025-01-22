@@ -12,6 +12,8 @@ import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
 import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
+import { SearchProductRequestDto } from './dtos/search-product-request.dto';
+import { SearchProductResponseDto } from './dtos/search-product-response.dto';
 
 @Injectable()
 export class ProductService {
@@ -186,7 +188,7 @@ export class ProductService {
             await this.productRepo.remove(product);
 
             //Return deleted product message
-            return { message: 'Product has been deleted successfully' };
+            return new DeleteProductResponseDto({ message: 'Product has been deleted successfully' });
         } catch (error) {
             console.error('Failed to delete product: ', error.message);
             throw new BadRequestException(error.message);
@@ -206,6 +208,59 @@ export class ProductService {
             return new CountProductResponseDto(total);
         } catch (error) {  
             console.error('Failed to count products: ', error.message);
+            throw new BadRequestException(error.message);
+        }
+    }
+
+    async searchProduct(query: SearchProductRequestDto): Promise<SearchProductResponseDto> {
+        try {
+            const queryBuilder = this.productRepo.createQueryBuilder('product')
+                .leftJoinAndSelect('product.category', 'category')
+                .skip(query.skip)
+                .take(query.limit);
+            
+            // Add search condition for name or description
+            if (query.search) {
+                queryBuilder.andWhere(
+                    '(LOWER(product.name) LIKE LOWER(:search) OR LOWER(product.description) LIKE LOWER(:search))',
+                    { search: `%${query.search}%` }
+                );
+            }
+
+            // Add price range conditions
+            if (query.minPrice !== undefined)
+                queryBuilder.andWhere('product.price >= :minPrice', { minPrice: query.minPrice });
+
+            if (query.maxPrice !== undefined) 
+                queryBuilder.andWhere('product.price <= :maxPrice', { maxPrice: query.maxPrice });
+            
+            // Add category filter
+            if (query.category) 
+                queryBuilder.andWhere('LOWER(category.name) = LOWER(:category)', { category: query.category });
+            
+            // Add sorting
+            const sortField = query.sortBy || 'createdAt';
+            const sortOrder = query.orderBy || 'DESC';
+            queryBuilder.orderBy(`product.${sortField}`, sortOrder);
+
+            // Execute query
+            const [products, total] = await queryBuilder.getManyAndCount();
+
+            if (products.length === 0) throw new NotFoundException('No products found matching your criteria');
+
+            //Return response
+            return new SearchProductResponseDto({
+                data: products.map(product => new GetProductDto(product)),
+                meta: {
+                    total,
+                    skip: query.skip,
+                    limit: query.limit,
+                    sortBy: query.sortBy,
+                    orderBy: query.orderBy,
+                },
+            });
+        } catch (error) {
+            console.error('Failed to search products: ', error.message);
             throw new BadRequestException(error.message);
         }
     }

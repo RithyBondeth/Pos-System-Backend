@@ -53,7 +53,7 @@ export const COUNT_PRODUCT_RESOURCES = {
     },
 }
 
-export const CREATE_PRODUCT_RESOURCE = {
+export const CREATE_PRODUCT_RESOURCES = {
     API_OPERATION: {
         SUMMARY: 'Create new product',
         DESCRIPTION: 'Creates a new product',
@@ -66,7 +66,7 @@ export const CREATE_PRODUCT_RESOURCE = {
     },
 }
 
-export const UPDATE_PRODUCT_RESOURCE = {
+export const UPDATE_PRODUCT_RESOURCES = {
     API_OPERATION: {
         SUMMARY: 'Update an existing product',
         DESCRIPTION: 'Updates an existing product by ID',
@@ -79,7 +79,7 @@ export const UPDATE_PRODUCT_RESOURCE = {
     },
 }
 
-export const DELETE_PRODUCT_RESOURCE = {
+export const DELETE_PRODUCT_RESOURCES = {
     API_OPERATION: {
         SUMMARY: 'Delete a product',
         DESCRIPTION: 'Deletes a specific product by ID',
@@ -91,3 +91,16 @@ export const DELETE_PRODUCT_RESOURCE = {
         DESCRIPTION: 'Invalid product ID provided',
     },
 }
+
+export const SEARCH_PRODUCT_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: 'Search products with filters',
+        DESCRIPTION: 'Search products by name, description, price range, category with sorting and pagination'
+    },
+    API_OKRES: {
+        DESCRIPTION: 'Returns filtered products with pagination metadata'
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: 'Failed to search products due to invalid parameters'
+    }
+};
