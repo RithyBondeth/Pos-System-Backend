@@ -1,6 +1,18 @@
 import { ApiPropertyOptional } from "@nestjs/swagger";
 import { Type } from "class-transformer";
-import { IsIn, IsNumber, IsOptional, IsString, Min } from "class-validator";
+import { IsEnum, IsIn, IsNumber, IsOptional, IsString, Min } from "class-validator";
+
+enum SortByE {
+    name = 'name',
+    price = 'price',
+    stockQuantity ='stockQuantity',
+    createdAt = 'createdAt'
+}
+
+enum OrderByE {
+    asc = 'ASC',
+    desc = 'DESC',
+}
 
 export class SearchProductRequestDto {
     @ApiPropertyOptional({
@@ -66,21 +78,21 @@ export class SearchProductRequestDto {
 
     @ApiPropertyOptional({
         description: 'Field to sort by',
-        enum: ['name', 'price', 'stockQuantity', 'createdAt'],
-        default: 'createdAt'
+        enum: SortByE,
+        default: SortByE.createdAt
     })
     @IsString()
-    @IsIn(['name', 'price', 'stockQuantity', 'createdAt'])
+    @IsEnum(SortByE)
     @IsOptional()
     sortBy: string = 'createdAt';
 
     @ApiPropertyOptional({
         description: 'Sort direction',
-        enum: ['ASC', 'DESC'],
-        default: 'DESC'
+        enum: OrderByE,
+        default: OrderByE.desc
     })
     @IsString()
-    @IsIn(['ASC', 'DESC'])
+    @IsEnum(OrderByE)
     @IsOptional()
-    orderBy: 'ASC' | 'DESC' = 'DESC';
+    orderBy: OrderByE.asc;
 }
