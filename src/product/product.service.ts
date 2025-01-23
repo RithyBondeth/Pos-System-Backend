@@ -12,8 +12,8 @@ import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
 import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
-import { SearchProductRequestDto } from './dtos/search-product-request.dto';
-import { SearchProductResponseDto } from './dtos/search-product-response.dto';
+import { SearchProductRequestDto } from './dtos/search-product.dto';
+import { LowStockProductDto } from './dtos/lowstock-product.dto';
 
 @Injectable()
 export class ProductService {
@@ -212,8 +212,9 @@ export class ProductService {
         }
     }
 
-    async searchProduct(query: SearchProductRequestDto): Promise<SearchProductResponseDto> {
+    async searchProduct(query: SearchProductRequestDto): Promise<GetProductDto[]> {
         try {
+            //Create query builder for search products
             const queryBuilder = this.productRepo.createQueryBuilder('product')
                 .leftJoinAndSelect('product.category', 'category')
                 .skip(query.skip)
@@ -249,18 +250,34 @@ export class ProductService {
             if (products.length === 0) throw new NotFoundException('No products found matching your criteria');
 
             //Return response
-            return new SearchProductResponseDto({
-                data: products.map(product => new GetProductDto(product)),
-                meta: {
-                    total,
-                    skip: query.skip,
-                    limit: query.limit,
-                    sortBy: query.sortBy,
-                    orderBy: query.orderBy,
-                },
-            });
+            return  products.map(product => new GetProductDto(product));
         } catch (error) {
             console.error('Failed to search products: ', error.message);
+            throw new BadRequestException(error.message);
+        }
+    }
+
+    async findLowStock(query: LowStockProductDto): Promise<GetProductDto[]> {
+        try {
+            // Create query builder for finding low stock products
+            const queryBuilder = this.productRepo.createQueryBuilder('product')
+                .leftJoinAndSelect('product.category', 'category')
+                .where('product.stockQuantity <= :threshold', { 
+                    threshold: query.threshold 
+                })
+                .orderBy('product.stockQuantity', 'ASC')
+                .skip(query.skip)
+                .take(query.limit);
+
+            // Execute query
+            const [products, total] = await queryBuilder.getManyAndCount();
+
+            if(products.length === 0) throw new NotFoundException(`No products found with stock quantity below ${query.threshold}`);
+
+            // Return response
+            return products.map((product) => new GetProductDto(product));
+        } catch (error) {
+            console.error('Failed to find low stock products: ', error.message);
             throw new BadRequestException(error.message);
         }
     }

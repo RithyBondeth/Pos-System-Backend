@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Param, ParseIntPipe, Post, Put, Query, UploadedFile, UseInterceptors } from '@nestjs/common';
 import { ProductService } from './product.service';
-import { API_TAG_RESOURCE_NAME, COUNT_PRODUCT_RESOURCES, CREATE_PRODUCT_RESOURCES, DELETE_PRODUCT_RESOURCES, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SEARCH_PRODUCT_RESOURCES, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCES } from './product.constant';
+import { API_TAG_RESOURCE_NAME, COUNT_PRODUCT_RESOURCES, CREATE_PRODUCT_RESOURCES, DELETE_PRODUCT_RESOURCES, FIND_LOWSTOCK_PRODUCTS_RESOURCES, FINDALL_PRODUCT_RESOURCES, FINDONE_PRODUCT_RESOURCES, RESOURCE_NAME, SEARCH_PRODUCT_RESOURCES, SORT_PRODUCT_RESOURCES, UPDATE_PRODUCT_RESOURCES } from './product.constant';
 import { ApiBadRequestResponse, ApiConsumes, ApiExtraModels, ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 import { UploadFileInterceptor } from '@app/common/uploadfile/uploadfile.interceptor';
 import { CreateProductDto } from './dtos/create-product.dto';
@@ -10,8 +10,8 @@ import { SortProductDto } from './dtos/sort-product.dto';
 import { UpdateProductDto } from './dtos/update-product.dto';
 import { DeleteProductResponseDto } from './dtos/delete-product-response.dto';
 import { CountProductQueryParamDto, CountProductResponseDto } from './dtos/count-product.dto';
-import { SearchProductRequestDto } from './dtos/search-product-request.dto';
-import { SearchProductResponseDto } from './dtos/search-product-response.dto';
+import { SearchProductRequestDto } from './dtos/search-product.dto';
+import { LowStockProductDto } from './dtos/lowstock-product.dto';
 
 @ApiTags(API_TAG_RESOURCE_NAME)
 @Controller(RESOURCE_NAME)
@@ -72,14 +72,30 @@ export class ProductController {
   })
   @ApiExtraModels(SearchProductRequestDto)
   @ApiOkResponse({ 
-    type: SearchProductResponseDto,
+    type: GetProductDto,
+    isArray: true,
     description: SEARCH_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION,
   })
   @ApiBadRequestResponse({ description: SEARCH_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
-  async searchProduct(@Query() query: SearchProductRequestDto): Promise<SearchProductResponseDto> {
+  async searchProduct(@Query() query: SearchProductRequestDto): Promise<GetProductDto[]> {
     return this.productService.searchProduct(query);
   }
 
+  @Get('low-stock')
+  @ApiOperation({
+    summary: FIND_LOWSTOCK_PRODUCTS_RESOURCES.API_OPERATION.SUMMARY,
+    description: FIND_LOWSTOCK_PRODUCTS_RESOURCES.API_OPERATION.DESCRIPTION,
+  })
+  @ApiExtraModels(LowStockProductDto)
+  @ApiOkResponse({
+    type: GetProductDto,
+    isArray: true,
+    description: FINDALL_PRODUCT_RESOURCES.API_OKRES.DESCRIPTION
+  }) 
+  @ApiBadRequestResponse({ description: FINDALL_PRODUCT_RESOURCES.API_BAD_REQRES.DESCRIPTION })
+  async findLowStock(@Query() query: LowStockProductDto): Promise<GetProductDto[]> {
+    return this.productService.findLowStock(query);
+  }
   @Get(':id')
   @ApiOperation({
     summary: FINDONE_PRODUCT_RESOURCES.API_OPERATION.SUMMARY,

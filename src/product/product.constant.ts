@@ -104,3 +104,16 @@ export const SEARCH_PRODUCT_RESOURCES = {
         DESCRIPTION: 'Failed to search products due to invalid parameters'
     }
 };
+
+export const FIND_LOWSTOCK_PRODUCTS_RESOURCES = {
+    API_OPERATION: {
+        SUMMARY: 'Get low stock products',
+        DESCRIPTION: 'Retrieve all products that are below the stock threshold'
+    },
+    API_OKRES: {
+        DESCRIPTION: 'Returns list of products with low stock'
+    },
+    API_BAD_REQRES: {
+        DESCRIPTION: 'Failed to retrieve low stock products'
+    }
+};
