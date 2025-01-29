@@ -65,7 +65,7 @@ export class AuthService {
                 : AUTH_MESSAGE.INVALID_TOKEN
             );
         }
-    } 
+    }
 
     async register(body: RegisterRequestDto, profile: Express.Multer.File): Promise<RegisterResponseDto> {
         return await this.staffService.createStaff(body, profile);

@@ -11,6 +11,7 @@ import { CurrentStaffInterceptor } from './auth/interceptors/current-staff.inter
 import { JwtModule } from '@nestjs/jwt';
 import { JwtService } from '@app/common/jwt/jwt.service';
 import { ProductModule } from './product/product.module';
+import { InventoryModule } from './inventory/inventory.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { ProductModule } from './product/product.module';
     JwtModule,
     AuthModule,
     ProductModule,
+    InventoryModule,
   ],
   controllers: [],
   providers: [

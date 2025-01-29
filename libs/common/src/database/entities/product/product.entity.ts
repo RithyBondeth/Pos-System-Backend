@@ -39,7 +39,7 @@ export class Product {
     updatedBy: Staff;
 
     //Track stock movements (add or remove)
-    @ManyToOne(() => Inventory, (inventory) => inventory.product, { cascade: true })
+    @OneToMany(() => Inventory, (inventory) => inventory.product, { cascade: true })
     inventory: Inventory[];
 
     @CreateDateColumn()
