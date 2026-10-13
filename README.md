@@ -1,86 +1,104 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+<div align="center">
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# POS System — Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+**A full-featured point-of-sale system API built with NestJS, TypeORM, and PostgreSQL.**
 
-## Description
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?style=for-the-badge&logo=typescript&logoColor=white)
+![NestJS](https://img.shields.io/badge/NestJS-E0234E?style=for-the-badge&logo=nestjs&logoColor=white)
+![TypeORM](https://img.shields.io/badge/TypeORM-FE0803?style=for-the-badge&logo=typeorm&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?style=for-the-badge&logo=postgresql&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white)
+![Swagger](https://img.shields.io/badge/Swagger-85EA2D?style=for-the-badge&logo=swagger&logoColor=white)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+</div>
 
-## Project setup
+---
+
+## Overview
+
+POS System Backend is the API for a retail point-of-sale system. It manages staff and roles, the product catalog, inventory movements, customers, and sales transactions, and it documents every endpoint with Swagger.
+
+## Features
+
+- **Staff authentication:** login, registration, forgot-password and reset-password emails, and JWT guards.
+- **Role-based access** with current-staff decorators and interceptors.
+- **Staff management:** create, update, filter, sort, count, and change roles.
+- **Products and categories:** CRUD, search, sorting, pagination, counts, and low-stock alerts.
+- **Inventory:** stock-in and stock-out operations.
+- **Customers and transactions** as data models for sales.
+- **File uploads** for images, served as static files.
+- **Swagger API documentation** with paginated-response decorators.
+- **Structured logging** with Pino.
+
+## Tech Stack
+
+| Area | Technology |
+| --- | --- |
+| Framework | NestJS |
+| Language | TypeScript |
+| Database | PostgreSQL, TypeORM |
+| Authentication | Passport JWT, bcrypt |
+| Email | SMTP (Nodemailer) |
+| Docs | Swagger (OpenAPI) |
+| Logging | Pino |
+
+## Getting Started
+
+### Prerequisites
+
+- Node.js and npm
+- A PostgreSQL database
+
+### Installation
 
 ```bash
-$ npm install
+git clone https://github.com/RithyBondeth/Pos-System-Backend.git
+cd Pos-System-Backend
+npm install
+npm run start:dev
 ```
 
-## Compile and run the project
+- API: `http://localhost:3000/api`
+- Swagger docs: `http://localhost:3000/docs`
 
-```bash
-# development
-$ npm run start
+### Environment Variables
 
-# watch mode
-$ npm run start:dev
+| Variable | Purpose |
+| --- | --- |
+| `DATABASE_URL`, `DATABASE_PORT` | PostgreSQL connection |
+| `SYNCHRONIZE` | Auto-sync the schema (development only) |
+| `JWT_SECRET`, `JWT_EXPIRES` | Token signing |
+| `SMTP_HOST`, `SMTP_PORT`, `EMAIL_USER`, `EMAIL_PASSWORD`, `EMAIL_FROM` | Password-reset email |
+| `PORT` | Server port (default `3000`) |
 
-# production mode
-$ npm run start:prod
+## Project Structure
+
+```text
+Pos-System-Backend/
+├── src/
+│   ├── auth/        # Login, register, forgot and reset password, guards
+│   ├── staff/       # Staff management
+│   ├── product/     # Products, plus category/ submodule
+│   └── inventory/   # Stock in and stock out
+└── libs/common/src/
+    ├── database/    # Entities: staff, role, customer, product, category,
+    │                # inventory, transaction
+    ├── email/       # Email module
+    ├── jwt/         # JWT module
+    ├── swagger/     # Swagger setup and decorators
+    ├── uploadfile/  # File upload interceptor and service
+    └── logger/      # Pino logger
 ```
 
-## Run tests
+## Related Repositories
 
-```bash
-# unit tests
-$ npm run test
+- [Pos-System-Frontend](https://github.com/RithyBondeth/Pos-System-Frontend): the Vue.js interface
 
-# e2e tests
-$ npm run test:e2e
+## Author
 
-# test coverage
-$ npm run test:cov
-```
+**Rithy Bondeth** — Full Stack Developer & AI Engineer
 
-## Resources
-
-Check out a few resources that may come in handy when working with NestJS:
-
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+[![Portfolio](https://img.shields.io/badge/Portfolio-0A0A0A?style=for-the-badge&logo=vercel&logoColor=white)](https://bondeth.dev)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/RithyBondeth)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/in/rithy-bondeth-484073282/)
